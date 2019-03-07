@@ -1,0 +1,8 @@
+   {% extends 'app/base.html' %}
+
+    {% block content %}
+    <h3>{{ post.title }} </h3>
+    <smaill>Post created by : {{ post.author }}</smaill>
+    <hr>
+    <p>{{ post.body }}</p>
+   {% endblock %}
