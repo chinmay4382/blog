@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import post_list,post_detail
+from app.views import post_list,post_detail,post_create,UserLoginView,UserLogoutView
 urlpatterns = [
     path('', post_list, name='post_list'),
-    path('<int:id>/<slug:slug>/', post_detail, name='post_detail')
+    path('<int:id>/<slug:slug>/', post_detail, name='post_detail'),
+    path('create', post_create, name='post_create'),
+    path('login',UserLoginView,name='login'),
+    path('logout', UserLogoutView, name='logout')
 
 ]
