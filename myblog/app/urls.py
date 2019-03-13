@@ -15,12 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import post_list,post_detail,post_create,UserLoginView,UserLogoutView
+from app.views import post_list,post_detail,post_create,UserLoginView,UserLogoutView,register
+from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', post_list, name='post_list'),
     path('<int:id>/<slug:slug>/', post_detail, name='post_detail'),
-    path('create', post_create, name='post_create'),
-    path('login',UserLoginView,name='login'),
-    path('logout', UserLogoutView, name='logout')
+    path('create/', post_create, name='post_create'),
+    path('login/',UserLoginView,name='user_login'),
+    path('logout/', UserLogoutView, name='user_logout'),
+    path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password-reset/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password-reset/complete', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('register/',register , name='register'),
 
 ]

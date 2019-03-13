@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from.models import Post
-from .forms import PostCreateForm,UserLoginForm
+from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 # Create your views here.
@@ -50,7 +50,22 @@ def UserLoginView(request):
         context={'form':form}
         return render(request,'app/login.html',context)
 
+
 def UserLogoutView(request):
     logout(request)
     return redirect('post_list')
 
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save(commit=False)
+            new_user
+            # new_user.set_password(form.cleaned_data['password'])
+            new_user.save()
+            return redirect('post_list')
+    else:
+        form = UserRegistrationForm()
+    context = {'form': form}
+    return render(request,'registration/register.html', context)

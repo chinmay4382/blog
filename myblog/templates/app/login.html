@@ -3,5 +3,10 @@
     <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+     <small>
+         <a href="{%  url 'register' %}"> Register </a> |
+
+         <a href="{%  url 'password_reset' %}"> Forgot Password </a>
+     </small>
     <input type="submit" value="Login" class="btn btn-outlined-success">
 {% endblock %}

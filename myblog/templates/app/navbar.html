@@ -24,12 +24,12 @@
          <span>Hi {{ request.user|capfirst}}</span>
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+          <a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a>
 
         </div>
           {% else %}
          <li class="nav-item">
-             <a href="{% url 'login' %}" class="nav-link">Login</a>
+             <a href="{% url 'user_login' %}" class="nav-link">Login</a>
 
          </li>
           {% endif %}
