@@ -4,6 +4,8 @@ from.models import Post
 from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 # Create your views here.
 
 def post_list(request):
@@ -60,11 +62,10 @@ def register(request):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            new_user = form.save(commit=False)
-            new_user
-            # new_user.set_password(form.cleaned_data['password'])
-            new_user.save()
+            form.save()
             return redirect('post_list')
+
+
     else:
         form = UserRegistrationForm()
     context = {'form': form}

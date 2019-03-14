@@ -1,6 +1,7 @@
 from django import forms
 from . models import Post
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 
 class PostCreateForm(forms.ModelForm):
@@ -19,24 +20,17 @@ class UserLoginForm(forms.Form):
     password=forms.CharField(label='password',widget=forms.PasswordInput(attrs={'placeholder':'Password '}))
 
 
-class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Password '}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder':'Confirm Password'}))
+class UserRegistrationForm(UserCreationForm):
+
 
     class Meta:
         model = User
 
-        fields = {
-            'username',
-            'first_name',
-            'last_name',
+        fields = [
             'email',
-        }
+            'username',
+            'password1',
+            'password2',
+            'is_staff'
 
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        confirm_password=self.cleaned_data.get('confirm password')
-        if password != confirm_password:
-            raise(forms.ValidationError(message="Password Mismatch"))
-        return confirm_password
-
+        ]
