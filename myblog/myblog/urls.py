@@ -19,6 +19,4 @@ from app.views import post_list,post_detail
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include('app.urls'),name="blog")
-
-
 ]

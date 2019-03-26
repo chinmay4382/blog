@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import post_list,post_detail,post_create,UserLoginView,UserLogoutView,register
+from app.views import post_list,post_detail,post_create,UserLoginView,UserLogoutView,register,edit_profile
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('', post_list, name='post_list'),
     path('<int:id>/<slug:slug>/', post_detail, name='post_detail'),
@@ -28,5 +30,13 @@ urlpatterns = [
     path('password-reset/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password-reset/complete', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('register/',register , name='register'),
+    path('edit_profile/', edit_profile, name='edit_profile'),
 
 ]
+
+
+"""
+if settings.DEBUG:
+    urlpatterns+=static(settings.MEDIA_URL,docment_root=settings.MEDIA_ROOT)
+
+"""

@@ -24,6 +24,8 @@
          <span>Hi {{ request.user|capfirst}}</span>
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'edit_profile' %}">MyProfile</a>
+
           <a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a>
 
         </div>

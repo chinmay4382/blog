@@ -1,11 +1,11 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse,HttpResponseRedirect
-from.models import Post
-from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm
+from.models import Post,Profile
+from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm,UserEditForm,ProfileEditForm
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 def post_list(request):
@@ -58,15 +58,36 @@ def UserLogoutView(request):
     return redirect('post_list')
 
 
+
 def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+    if request.method =="POST":
+        form=UserRegistrationForm(request.POST or None)
         if form.is_valid():
-            form.save()
+            new_user=form.save(commit=False)
+            password = form.cleaned_data.get('password')
+            new_user.set_password(password)
+            new_user.save()
+            Profile.objects.create(user=new_user)
             return redirect('post_list')
-
-
     else:
         form = UserRegistrationForm()
     context = {'form': form}
     return render(request,'registration/register.html', context)
+
+
+def edit_profile(request):
+    if request.method == 'POST':
+        user_form =UserEditForm(data=request.POST or None,instance=request.user)
+        profile_form =ProfileEditForm(data=request.POST or None,instance=request.user.profile,files=request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+    else:
+        user_form=UserEditForm(instance=request.user)
+        profile_form=ProfileEditForm(instance=request.user.profile)
+
+    context={
+        'user_form':user_form,
+        'profile_form':profile_form,
+    }
+    return render(request,'app/edit_profile.html',context)
