@@ -4,17 +4,34 @@ from.models import Post,Profile
 from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm,UserEditForm,ProfileEditForm
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+
 def post_list(request):
     posts=Post.objects.all()
+    query= request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query)|
+            Q(author__username__icontains=query)|
+            Q(body__icontains=query)
+        )
     context={'posts':posts,}
     return render(request,'app/post_list.html',context)
 
+
 def post_detail(request,id,slug):
     post=get_object_or_404(Post,id=id,slug=slug)
+    query= request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query)|
+            Q(author__username__icontains=query)|
+            Q(body__icontains=query)
+        )
     context={'post':post}
     return render(request,'app/post_detail.html',context)
 
@@ -77,17 +94,18 @@ def register(request):
 
 def edit_profile(request):
     if request.method == 'POST':
-        user_form =UserEditForm(data=request.POST or None,instance=request.user)
-        profile_form =ProfileEditForm(data=request.POST or None,instance=request.user.profile,files=request.FILES)
+        user_form = UserEditForm(data=request.POST or None,instance=request.user)
+        profile_form = ProfileEditForm(data=request.POST or None,instance=request.user.profile,files=request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            return HttpResponseRedirect(reverse("edit_profile"))
     else:
-        user_form=UserEditForm(instance=request.user)
-        profile_form=ProfileEditForm(instance=request.user.profile)
+        user_form = UserEditForm(instance=request.user)
+        profile_form = ProfileEditForm(instance=request.user.profile)
 
     context={
-        'user_form':user_form,
+        'user_form': user_form,
         'profile_form':profile_form,
     }
     return render(request,'app/edit_profile.html',context)
