@@ -19,4 +19,18 @@
             </div>
     {% endfor %}
 </div>
+    <ul class="pagination">
+        {% for p in posts.paginator.pagerange %}
+            {% if posts.number == p %}
+                <li class="page-item active">
+                <a href="?page={{ p }}" class="page-link">{{ p }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                <a href="?page={{ p }}" class="page-link">{{ p }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+    </ul>
 {% endblock %}

@@ -6,21 +6,30 @@ from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
 # Create your views here.
 
 
 def post_list(request):
-    posts=Post.objects.all()
-    query= request.GET.get('q')
+    post_list = Post.objects.all().order_by('-id')
+    query = request.GET.get('q')
     if query:
         posts = Post.objects.filter(
             Q(title__icontains=query)|
             Q(author__username__icontains=query)|
             Q(body__icontains=query)
         )
-    context={'posts':posts,}
-    return render(request,'app/post_list.html',context)
+    paginator = Paginator(post_list,3)
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(1)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    context={'posts': posts,}
+    return render(request, 'app/post_list.html',context)
 
 
 def post_detail(request,id,slug):
