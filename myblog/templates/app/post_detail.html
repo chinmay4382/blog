@@ -1,8 +1,52 @@
-   {% extends 'app/base.html' %}
+{% extends 'app/base.html' %}
 
-    {% block content %}
-    <h3>{{ post.title }} </h3>
-    <smaill>Post created by : {{ post.author }}</smaill>
-    <hr>
-    <p>{{ post.body }}</p>
-   {% endblock %}
+
+{% block content %}
+
+
+  <h3>{{ post.title }}</h3>
+  <small>Post created by: {{ post.author }}</small>
+  <hr>
+  <p>{{ post.body }}</p>
+
+  <div class="row gallery">
+    {% for p in post.images_set.all %}
+    {% if p.image %}
+      <div class="col-md-3">
+        <img src="{{ p.image.url }}" alt="Image Not Found" class="img-thumbnail">
+      </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+<div id="like-section">
+  {% include 'app/like_section.html' %}
+</div>
+
+
+
+
+{% if post.author == request.user %}
+
+<div class="section-1" style="float:right;">
+
+  <a href="{% url 'edit_post' post.id %}">
+    <button type="button" class="btn btn-outline-success">Edit</button>
+  </a>
+  <a href="{% url 'post_delete' post.id %}" >
+    <button type="button" class="btn btn-danger">Delete</button>
+  </a>
+</div>
+{% endif %}
+
+
+<br><br>
+<hr>
+
+{% if not post.restrict_comment %}
+  <div class="main-comment-section">
+    {% include 'app/comments.html' %}
+  </div>
+{% endif %}
+
+{% endblock %}

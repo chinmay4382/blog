@@ -37,9 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'django_mysql',
+    'django_mysql',
     'app',
+    'social_django',
 ]
+
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    'app.authentication.EmailAuthBackend',
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
 
 ROOT_URLCONF = 'myblog.urls'
@@ -64,6 +75,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.login_redirect',
+                'social_django.context_processors.backends',
             ],
         },
     },
@@ -147,3 +160,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media').replace('\\', '/')
+
+LOGIN_REDIRECT_URL='post_list'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1087726374741-knua85q86oh36cpf3evgk2u2vut8umla.apps.googleusercontent.com'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'AkXcEuo2AaoJr4pjdKr05N4O'
+
+SOCIAL_AUTH_GITHUB_KEY = '74f7ba962d4afdd4b80f'
+
+SOCIAL_AUTH_GITHUB_SECRET = '487482893e616659f36ca1b961d90238eeb7e9d7'

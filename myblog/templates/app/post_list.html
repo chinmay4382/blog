@@ -1,36 +1,61 @@
 {% extends 'app/base.html' %}
 {% block content %}
-<div class="row">
 
-    {% for i in posts %}
-        <div class ="col-md-6">
-          <div class ="img-thumbnail">
 
-              <a href= "{{ i.get_absolute_url }}">{{ i.title }}</a><small style="float:right">{{ i.created }}</small><br>
-              Author: {{ i.author}}<br>
-               {{ i.body }}
-          </div>
-        <br>
-        </div>
-
-        {% empty %}
-            <div class="container-fluid">
-            <h3>No results for "{{ request.GET.q }}"</h3>
-            </div>
+<div class="messages">
+  {% if messages %}
+    {% for message in messages %}
+      <p class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </p>
     {% endfor %}
+  {% endif %}
 </div>
-    <ul class="pagination">
-        {% for p in posts.paginator.pagerange %}
-            {% if posts.number == p %}
-                <li class="page-item active">
-                <a href="?page={{ p }}" class="page-link">{{ p }}</a>
-                </li>
-            {% else %}
-                <li class="page-item">
-                <a href="?page={{ p }}" class="page-link">{{ p }}</a>
-            </li>
-            {% endif %}
-        {% endfor %}
 
-    </ul>
+
+    <div class="row">
+  {% for p in posts %}
+    <div class="col-md-6">
+      <div class="img-thumbnail">
+        <a href="{{ p.get_absolute_url }}">{{ p.title }}</a><small style="float:right">{{ p.created }}</small><br>
+        Author: {{ p.author }}<br>
+        {{ p.body }}
+      </div>
+      <br>
+    </div>
+  {% empty %}
+      <div class="container-fluid">
+        <h3>No Posts Found having search query "{{ request.GET.q }}"</h3>
+      </div>
+
+  {% endfor %}
+</div>
+
+
+<ul class="pagination">
+  {% if posts.has_previous %}
+    <li class="page-item">
+      <a href="?page={{ posts.previous_page_number }}" class="page-link">&laquo;</a>
+    </li>
+  {% endif %}
+
+  {% for p in page_range %}
+    {% if posts.number == p %}
+      <li class="page-item active">
+        <a href="?page={{ p }}" class="page-link">{{ p }}</a>
+      </li>
+    {% else %}
+      <li class="page-item">
+        <a href="?page={{ p }}" class="page-link">{{ p }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+
+  {% if posts.has_next %}
+    <li class="page-item">
+      <a href="?page={{ posts.next_page_number }}" class="page-link">&raquo;</a>
+    </li>
+  {% endif %}
+</ul>
+
 {% endblock %}
