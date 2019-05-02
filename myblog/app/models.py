@@ -65,7 +65,6 @@ class Images(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    reply = models.ForeignKey('Comment', null=True, related_name="replies",on_delete=models.CASCADE)
     content = models.TextField(max_length=160)
     timestamp = models.DateTimeField(auto_now_add=True)
 

@@ -10,6 +10,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 from django.forms import modelformset_factory
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
+
 # Create your views here.
 
 
@@ -44,6 +46,9 @@ def post_list(request):
 
     return render(request, 'app/post_list.html', context)
 
+def home(request):
+    return redirect('post_list')
+
 
 def proper_pagination(posts, index):
     start_index = 0
@@ -56,21 +61,16 @@ def proper_pagination(posts, index):
 
 def post_detail(request, id, slug):
     post = get_object_or_404(Post, id=id, slug=slug)
-    comments = Comment.objects.filter(post=post, reply=None).order_by('-id')
+    comments = Comment.objects.filter(post=post).order_by('-id')
     is_liked = False
     if post.likes.filter(id=request.user.id).exists():
         is_liked = True
-
 
     if request.method == 'POST':
         comment_form = CommentForm(request.POST or None)
         if comment_form.is_valid():
             content = request.POST.get('content')
-            reply_id = request.POST.get('comment_id')
-            comment_qs = None
-            if reply_id:
-                comment_qs = Comment.objects.get(id=reply_id)
-            comment = Comment.objects.create(post=post, user=request.user, content=content, reply=comment_qs)
+            comment = Comment.objects.create(post=post, user=request.user, content=content)
             comment.save()
             # return HttpResponseRedirect(post.get_absolute_url())
     else:
@@ -125,8 +125,13 @@ def post_delete(request, id):
 
 
 def post_edit(request,id):
-    print(id)
-    post = get_object_or_404(Post, id=id)
+    try:
+        print("1111111111111111")
+        post = get_object_or_404(Post, id=id)
+    except :
+        print("Login Through Social does not have Profile ")
+        post=None
+        pass
     ImageFormset = modelformset_factory(Images, fields=('image',), extra=4, max_num=4)
     if post.author != request.user:
         raise Http404()
@@ -217,6 +222,7 @@ def register(request):
 
 
 def edit_profile(request):
+
     if request.method == 'POST':
         user_form = UserEditForm(data=request.POST or None, instance=request.user)
         profile_form = ProfileEditForm(data=request.POST or None,instance=request.user.profile, files=request.FILES)
@@ -225,8 +231,11 @@ def edit_profile(request):
             profile_form.save()
             return HttpResponseRedirect(reverse("edit_profile"))
     else:
-        user_form = UserEditForm(instance=request.user)
-        print(request.user.profile)
+        try:
+            user_form = UserEditForm(instance=request.user)
+        except:
+            print("Social Login does not have Profile")
+            user_form=None
         profile_form = ProfileEditForm(instance=request.user.profile)
 
     context = {

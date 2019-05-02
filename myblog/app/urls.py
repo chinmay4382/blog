@@ -19,6 +19,7 @@ from app.views import *
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+
 urlpatterns = [
     path('', post_list, name='post_list'),
     path('<int:id>/<slug:slug>/', post_detail, name='post_detail'),
