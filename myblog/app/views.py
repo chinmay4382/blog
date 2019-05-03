@@ -5,13 +5,11 @@ from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.loader import render_to_string
 from django.forms import modelformset_factory
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-
 # Create your views here.
 
 
@@ -177,7 +175,6 @@ def like_post(request):
 
 
 def UserLoginView(request):
-
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         if form.is_valid():
@@ -209,11 +206,8 @@ def register(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST or None)
         if form.is_valid():
-            new_user = form.save(commit=False)
-            password = form.cleaned_data.get('password')
-            new_user.set_password(password)
-            new_user.save()
-            Profile.objects.create(user=new_user)
+            form.save()
+            Profile.objects.create(user=User.objects.get(username=request.POST['username']))
             return redirect('post_list')
     else:
         form = UserRegistrationForm()
@@ -233,9 +227,8 @@ def edit_profile(request):
     else:
         try:
             user_form = UserEditForm(instance=request.user)
-        except:
-            print("Social Login does not have Profile")
-            user_form=None
+        except ObjectDoesNotExist:
+            return HttpResponse("Social Login does not have Profile")
         profile_form = ProfileEditForm(instance=request.user.profile)
 
     context = {
