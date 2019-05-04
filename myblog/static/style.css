@@ -24,4 +24,42 @@ body{
   height: 250px;
   width: 300px;
 }
+.footer{
 
+    padding-top: 50px;
+    margin-top: 150px;
+        margin-right:-15px;
+
+}
+
+.footer p{
+    color:white;
+    margin-left:15px;
+}
+#top p{
+
+margin-bottom:90px;
+    margin-top:50px;
+    color:#20AA76;
+
+
+}
+#top{
+    background-color:#0C3C26;
+    margin-left:0px;
+    margin-left: 11px;
+}
+.col-md-6{
+    margin-top:25px;
+}
+.pagination a{
+   text-align:center;
+}
+
+form{
+    margin-top:50px;
+    text-align:center;
+}
+#home{
+    float:left;
+}
