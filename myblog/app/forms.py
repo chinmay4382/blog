@@ -16,8 +16,8 @@ class PostCreateForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField(label='username',widget=forms.TextInput(attrs={'placeholder': 'UserName '}))
-    password = forms.CharField(label='password',widget=forms.PasswordInput(attrs={'placeholder': 'Password '}))
+    username = forms.CharField(label='Username/Email',widget=forms.TextInput(attrs={'placeholder': 'UserName/Email '}))
+    password = forms.CharField(label='Password',widget=forms.PasswordInput(attrs={'placeholder': 'Password '}))
 
 
 class UserRegistrationForm(UserCreationForm):

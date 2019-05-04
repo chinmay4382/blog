@@ -45,7 +45,7 @@ def post_list(request):
     return render(request, 'app/post_list.html', context)
 
 def home(request):
-    return redirect('post_list')
+    return render(request,'app/index.html',{})
 
 
 def proper_pagination(posts, index):
@@ -124,7 +124,6 @@ def post_delete(request, id):
 
 def post_edit(request,id):
     try:
-        print("1111111111111111")
         post = get_object_or_404(Post, id=id)
     except :
         print("Login Through Social does not have Profile ")
@@ -208,7 +207,10 @@ def register(request):
         if form.is_valid():
             form.save()
             Profile.objects.create(user=User.objects.get(username=request.POST['username']))
-            return redirect('post_list')
+            messages.success(request, 'Account created successfully.Please login' )
+            return redirect('user_login')
+
+
     else:
         form = UserRegistrationForm()
     context = {'form': form}
